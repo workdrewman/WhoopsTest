@@ -1,0 +1,19 @@
+// =======================================================
+// Description: This header file contains the declaration
+//              of the NormalTile class.
+// =======================================================
+
+#ifndef GAME_BOARD_TILE_NORMAL_H
+#define GAME_BOARD_TILE_NORMAL_H
+
+#include "base_tile.hpp" // For Tile
+
+namespace game_board::tile
+{
+class NormalTile : public Tile
+{
+ public:
+  bool CanWhoops() override { return true; };
+};
+} // namespace game_board::tile
+#endif // GAME_BOARD_TILE_NORMAL_H

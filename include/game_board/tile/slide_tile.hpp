@@ -1,0 +1,26 @@
+// =======================================================
+// Description: This header file contains the declaration
+//              of the SlideTile class.
+// =======================================================
+
+#ifndef GAME_BOARD_TILE_SLIDE_H
+#define GAME_BOARD_TILE_SLIDE_H
+
+#include "base_tile.hpp" // For Tile
+
+namespace game_board::tile
+{
+class SlideTile : public Tile
+{
+ public:
+  bool CanWhoops() override { return true; };
+
+  /// @brief Method that determines if a piece will slide
+  /// @return True if the tile is the start of a slide
+  bool IsSlideStart();
+
+ private:
+  bool is_slide_start_{false};
+};
+} // namespace game_board::tile
+#endif // GAME_BOARD_TILE_SLIDE_H
