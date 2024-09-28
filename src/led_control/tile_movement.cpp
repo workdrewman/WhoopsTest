@@ -8,6 +8,9 @@
 
 #include "FastLED.h"
 
+namespace led_control
+{
+
 void indicate_move(int from, int to, CRGB color)
 {
   FastLED.leds()[to] = color;
@@ -27,3 +30,4 @@ void indicate_move(int from, int to, CRGB color)
   FastLED.clear();
   FastLED.show();
 }
+} // namespace led_control
