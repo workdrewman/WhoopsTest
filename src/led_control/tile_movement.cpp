@@ -20,7 +20,7 @@ void indicate_move(int from, int to, CRGB color)
       FastLED.leds()[i-1].fadeLightBy(200);
     }
     FastLED.leds()[i] = color;
-    FastLED.leds()[i].fadeLightBy(150);
+    FastLED.leds()[i].fadeLightBy(200);
     FastLED.show();
     FastLED.delay(75);
   }
@@ -29,9 +29,9 @@ void indicate_move(int from, int to, CRGB color)
   FastLED.delay(75);
   FastLED.show();
   FastLED.clear();
-  FastLED.leds()[to] = color;
-  FastLED.show();
-  FastLED.delay(150);
+  // FastLED.leds()[to] = color;
+  // FastLED.show();
+  // FastLED.delay(150);
   FastLED.clear();
   FastLED.show();
 }
