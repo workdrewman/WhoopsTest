@@ -23,7 +23,9 @@ class Tile
  public:
   /// @brief Call to determine if a tile can be whoopsed
   /// @return True if a game piece can be whoopsed
-  virtual bool CanWhoops() { return false; }
+  virtual bool CanWhoops() = 0;
+  virtual void MoveTo() = 0;
+  virtual void MoveFrom() = 0;
 
  private:
   int index_{-1};

@@ -18,6 +18,8 @@ class SlideTile : public Tile
   /// @brief Method that determines if a piece will slide
   /// @return True if the tile is the start of a slide
   bool IsSlideStart();
+  void MoveTo() override;
+  void MoveFrom() override;
 
  private:
   bool is_slide_start_{false};

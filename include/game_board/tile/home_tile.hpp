@@ -14,6 +14,8 @@ class HomeTile : public Tile
 {
  public:
   bool CanWhoops() override { return false; };
+  void MoveTo() override;
+  void MoveFrom() override;
 
  private:
   int pieces_occupying_{-1};
