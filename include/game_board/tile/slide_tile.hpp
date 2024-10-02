@@ -8,12 +8,12 @@
 
 #include "base_tile.hpp" // For Tile
 
-namespace game_board::tile
+namespace game_board
 {
 class SlideTile : public Tile
 {
  public:
-  bool CanWhoops() override { return true; };
+  bool CanBeWhoopsed() override { return true; };
 
   /// @brief Method that determines if a piece will slide
   /// @return True if the tile is the start of a slide
@@ -24,5 +24,5 @@ class SlideTile : public Tile
  private:
   bool is_slide_start_{false};
 };
-} // namespace game_board::tile
+} // namespace game_board
 #endif // GAME_BOARD_TILE_SLIDE_H

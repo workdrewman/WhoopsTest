@@ -8,17 +8,17 @@
 
 #include "base_tile.hpp" // For Tile
 
-namespace game_board::tile
+namespace game_board
 {
 class StartTile : public Tile
 {
  public:
-  bool CanWhoops() override { return false; };
+  bool CanBeWhoopsed() override { return false; };
   void MoveTo() override;
   void MoveFrom() override;
 
  private:
   int pieces_occupying_{-1};
 };
-} // namespace game_board::tile
+} // namespace game_board
 #endif // GAME_BOARD_TILE_START_H

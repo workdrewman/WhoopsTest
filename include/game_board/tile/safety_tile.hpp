@@ -8,14 +8,14 @@
 
 #include "base_tile.hpp" // For Tile
 
-namespace game_board::tile
+namespace game_board
 {
 class SafetyTile : public Tile
 {
  public:
-  bool CanWhoops() override { return false; };
+  bool CanBeWhoopsed() override { return false; };
   void MoveTo() override;
   void MoveFrom() override;
 };
-} // namespace game_board::tile
+} // namespace game_board
 #endif // GAME_BOARD_TILE_SAFETY_H
