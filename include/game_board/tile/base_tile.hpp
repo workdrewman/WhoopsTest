@@ -8,16 +8,10 @@
 #ifndef GAME_BOARD_TILE_BASE_H
 #define GAME_BOARD_TILE_BASE_H
 
+#include "game_board/whoops_color.hpp" // for WhoopsColor
+
 namespace game_board::tile
 {
-enum class ColorSide{
-  kRed,
-  kGreen,
-  kBlue,
-  kYellow,
-  kNone
-};
-
 class Tile
 {
  public:
@@ -29,8 +23,8 @@ class Tile
 
  private:
   int index_{-1};
-  ColorSide tile_color_{ColorSide::kNone};
-  ColorSide color_occupied_{ColorSide::kNone};
+  WhoopsColor tile_color_{WhoopsColor::kNone};
+  WhoopsColor color_occupied_{WhoopsColor::kNone};
 };
 } // namespace game_board::tile
 #endif // GAME_BOARD_TILE_BASE_H
