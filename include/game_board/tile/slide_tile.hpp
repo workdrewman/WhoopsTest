@@ -7,6 +7,7 @@
 #define GAME_BOARD_TILE_SLIDE_H
 
 #include "base_tile.hpp" // For Tile
+#include "game_board/pawn/pawn.hpp" // for Pawn
 
 namespace game_board
 {
@@ -18,8 +19,6 @@ class SlideTile : public Tile
   /// @brief Method that determines if a piece will slide
   /// @return True if the tile is the start of a slide
   bool IsSlideStart();
-  void MoveTo() override;
-  void MoveFrom() override;
 
  private:
   bool is_slide_start_{false};

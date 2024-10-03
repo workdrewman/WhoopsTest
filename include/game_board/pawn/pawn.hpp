@@ -11,8 +11,6 @@
 #include "game_board/whoops_color.hpp" // for WhoopsColor
 #include "game_board/tile/base_tile.hpp" // for Tile
 
-#include <memory> // for std::shared_ptr
-
 namespace game_board
 {
 
@@ -25,8 +23,8 @@ class Pawn
   
   /// @brief Function that updates the tile to occupy
   ///        a new tile that is passed in.
-  /// @param new_tile Shared pointer of the new tile
-  void MoveTo(std::shared_ptr<Tile> new_tile);
+  /// @param new_tile Pointer of the new tile
+  void MoveTo(Tile* new_tile);
 
   /// @brief Function that returns the tile rule
   ///        of whether it can be whoopsed
@@ -37,10 +35,12 @@ class Pawn
   ///        one pawn can whoops the other.
   /// @param other_pawn Any other pawn
   /// @return True if you can whoops the other pawn
-  bool CanWhoops(std::shared_ptr<Pawn> other_pawn);
+  bool CanWhoops(Pawn* other_pawn);
+
+  WhoopsColor GetColor();
 
  private:
-  std::shared_ptr<Tile> tile_occupied_{};
+  Tile* tile_occupied_{};
   WhoopsColor color_{WhoopsColor::kNone};
   int id_{0};
 };
