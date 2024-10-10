@@ -14,13 +14,30 @@ namespace game_board
 class SlideTile : public Tile
 {
  public:
-  bool CanBeWhoopsed() override { return true; };
+  SlideTile(int index, WhoopsColor tile_color, bool slide_start = false) : 
+            led_index_{index}, tile_color_{tile_color}, is_slide_start_{slide_start} {}
+
+  bool CanBeWhoopsed() override { return !IsVacant(); };
+  
+  /// @brief Updates the color of the pawn occupying the space
+  /// @param pawn Pointer to the pawn that is moving to the space
+  void MoveTo(Pawn* pawn) override { color_occupied_ = pawn->GetColor(); }
+
+  /// @brief Updates the color of the pawn occupying to none
+  void MoveFrom() override { color_occupied_ = WhoopsColor::kNone; }
+
+  /// @brief Returns bool to tell if a piece is on the tile or not
+  /// @return True if a piece is occupying
+  bool IsVacant() override { return (color_occupied_ != WhoopsColor::kNone); }
 
   /// @brief Method that determines if a piece will slide
   /// @return True if the tile is the start of a slide
-  bool IsSlideStart();
+  bool IsSlideStart() { return is_slide_start_; };
 
  private:
+  int led_index_{-1};
+  WhoopsColor tile_color_{WhoopsColor::kNone};
+  WhoopsColor color_occupied_{WhoopsColor::kNone};
   bool is_slide_start_{false};
 };
 } // namespace game_board

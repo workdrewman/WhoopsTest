@@ -4,6 +4,10 @@
 #include "power_mgt.h" // for set_max_power_in_volts_and_milliamps
 #include "led_control/tile_movement.h" // for indicate_move
 #include <iostream>
+#include "game_board/pawn/pawn.hpp" // for Pawn
+#include "game_board/tile/tile_container.hpp" // for TileContainer
+#include "game_board/whoops_color.hpp" // for WhoopsColor
+#include <memory> // for make_unique
 
 #define NUM_LEDS 44
 #define DATA_PIN 13
@@ -19,6 +23,52 @@ void setup() {
   Serial.begin(9600);
   FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);
   set_max_power_in_volts_and_milliamps(5, 120);
+  auto tile_types = {game_board::TileType::kNormal, 
+                     game_board::TileType::kSlide, game_board::TileType::kSlide,
+                     game_board::TileType::kSlide, game_board::TileType::kSlide, game_board::TileType::kNormal,
+                     game_board::TileType::kNormal, game_board::TileType::kSlide, game_board::TileType::kSlide,
+                     game_board::TileType::kSlide, game_board::TileType::kSlide, game_board::TileType::kNormal,
+                     
+                     game_board::TileType::kSlide, game_board::TileType::kSlide,
+                     game_board::TileType::kSlide, game_board::TileType::kSlide, game_board::TileType::kNormal,
+                     game_board::TileType::kNormal, game_board::TileType::kSlide, game_board::TileType::kSlide,
+                     game_board::TileType::kSlide, game_board::TileType::kSlide, game_board::TileType::kNormal,
+                     
+                     game_board::TileType::kSlide, game_board::TileType::kSlide,
+                     game_board::TileType::kSlide, game_board::TileType::kSlide, game_board::TileType::kNormal,
+                     game_board::TileType::kNormal, game_board::TileType::kSlide, game_board::TileType::kSlide,
+                     game_board::TileType::kSlide, game_board::TileType::kSlide, game_board::TileType::kNormal,
+
+                     game_board::TileType::kSlide, game_board::TileType::kSlide,
+                     game_board::TileType::kSlide, game_board::TileType::kSlide, game_board::TileType::kNormal,
+                     game_board::TileType::kNormal, game_board::TileType::kSlide, game_board::TileType::kSlide,
+                     game_board::TileType::kSlide, game_board::TileType::kSlide};
+
+  auto colors = {game_board::WhoopsColor::kNone,
+                  game_board::WhoopsColor::kYellow, game_board::WhoopsColor::kYellow,
+                  game_board::WhoopsColor::kYellow, game_board::WhoopsColor::kYellow, game_board::WhoopsColor::kYellow,
+                  game_board::WhoopsColor::kYellow, game_board::WhoopsColor::kYellow, game_board::WhoopsColor::kYellow,
+                  game_board::WhoopsColor::kYellow, game_board::WhoopsColor::kYellow, game_board::WhoopsColor::kNone,
+
+                  game_board::WhoopsColor::kGreen, game_board::WhoopsColor::kGreen,
+                  game_board::WhoopsColor::kGreen, game_board::WhoopsColor::kGreen, game_board::WhoopsColor::kGreen,
+                  game_board::WhoopsColor::kGreen, game_board::WhoopsColor::kGreen, game_board::WhoopsColor::kGreen,
+                  game_board::WhoopsColor::kGreen, game_board::WhoopsColor::kGreen, game_board::WhoopsColor::kNone,
+
+                  game_board::WhoopsColor::kRed, game_board::WhoopsColor::kRed,
+                  game_board::WhoopsColor::kRed, game_board::WhoopsColor::kRed, game_board::WhoopsColor::kRed,
+                  game_board::WhoopsColor::kRed, game_board::WhoopsColor::kRed, game_board::WhoopsColor::kRed,
+                  game_board::WhoopsColor::kRed, game_board::WhoopsColor::kRed, game_board::WhoopsColor::kNone,
+                  
+                  game_board::WhoopsColor::kBlue, game_board::WhoopsColor::kBlue,
+                  game_board::WhoopsColor::kBlue, game_board::WhoopsColor::kBlue, game_board::WhoopsColor::kBlue,
+                  game_board::WhoopsColor::kBlue, game_board::WhoopsColor::kBlue, game_board::WhoopsColor::kBlue,
+                  game_board::WhoopsColor::kBlue, game_board::WhoopsColor::kBlue};
+
+  auto tile_container{std::make_shared<game_board::TileContainer>(tile_types, colors)};
+  auto pawn{std::make_shared<game_board::Pawn>(game_board::WhoopsColor::kBlue, 0)};
+
+
   // button1.attachClick(handleClick); 
 }
 

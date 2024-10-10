@@ -9,10 +9,13 @@
 #define GAME_BOARD_PAWN_H
 
 #include "game_board/whoops_color.hpp" // for WhoopsColor
-#include "game_board/tile/base_tile.hpp" // for Tile
+
+#include <memory>
 
 namespace game_board
 {
+// Forward declaration of Tile to avoid circular dependency
+class Tile;
 
 class Pawn
 {
@@ -24,7 +27,7 @@ class Pawn
   /// @brief Function that updates the tile to occupy
   ///        a new tile that is passed in.
   /// @param new_tile Pointer of the new tile
-  void MoveTo(Tile* new_tile);
+  void MoveTo(std::shared_ptr<Tile> new_tile);
 
   /// @brief Function that returns the tile rule
   ///        of whether it can be whoopsed
@@ -40,7 +43,7 @@ class Pawn
   WhoopsColor GetColor();
 
  private:
-  Tile* tile_occupied_{};
+  std::shared_ptr<Tile> tile_occupied_{};
   WhoopsColor color_{WhoopsColor::kNone};
   int id_{0};
 };
