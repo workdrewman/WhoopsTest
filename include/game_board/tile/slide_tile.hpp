@@ -21,10 +21,10 @@ class SlideTile : public Tile
   
   /// @brief Updates the color of the pawn occupying the space
   /// @param pawn Pointer to the pawn that is moving to the space
-  void MoveTo(Pawn* pawn) override { color_occupied_ = pawn->GetColor(); }
+  void MoveTo(Pawn* pawn) override { color_occupied_ = pawn->GetColor(); pawn_ = pawn; }
 
   /// @brief Updates the color of the pawn occupying to none
-  void MoveFrom() override { color_occupied_ = WhoopsColor::kNone; }
+  void MoveFrom() override { color_occupied_ = WhoopsColor::kNone; pawn_ = nullptr; }
 
   /// @brief Returns bool to tell if a piece is on the tile or not
   /// @return True if a piece is occupying
@@ -39,6 +39,7 @@ class SlideTile : public Tile
   WhoopsColor tile_color_{WhoopsColor::kNone};
   WhoopsColor color_occupied_{WhoopsColor::kNone};
   bool is_slide_start_{false};
+  Pawn* pawn_{nullptr};
 };
 } // namespace game_board
 #endif // GAME_BOARD_TILE_SLIDE_H

@@ -27,23 +27,23 @@ TileContainer::TileContainer(std::vector<TileType> tile_types, std::vector<Whoop
   for (auto idx = 0; idx < tile_types.size(); ++idx) {
     switch (tile_types.at(idx)){
       case TileType::kHome:
-        tiles_.emplace_back(std::make_shared<HomeTile>(idx, WhoopsColor::kBlue));
+        tiles_.emplace_back(std::make_shared<HomeTile>(idx, tile_colors.at(idx)));
         slide_prev = false;
         break;
       case TileType::kNormal:
-        tiles_.emplace_back(std::make_shared<NormalTile>(idx, WhoopsColor::kBlue));
+        tiles_.emplace_back(std::make_shared<NormalTile>(idx, tile_colors.at(idx)));
         slide_prev = false;
         break;
       case TileType::kSafety:
-        tiles_.emplace_back(std::make_shared<SafetyTile>(idx, WhoopsColor::kBlue));
+        tiles_.emplace_back(std::make_shared<SafetyTile>(idx, tile_colors.at(idx)));
         slide_prev = false;
         break;
       case TileType::kSlide:
-        tiles_.emplace_back(std::make_shared<SlideTile>(idx, WhoopsColor::kBlue, !slide_prev));
+        tiles_.emplace_back(std::make_shared<SlideTile>(idx, tile_colors.at(idx), !slide_prev));
         slide_prev = true;
         break;
       case TileType::kStart:
-        tiles_.emplace_back(std::make_shared<StartTile>(idx, WhoopsColor::kBlue));
+        tiles_.emplace_back(std::make_shared<StartTile>(idx, tile_colors.at(idx)));
         slide_prev = false;
         break;
     }
