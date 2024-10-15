@@ -22,12 +22,14 @@ class Tile
   /// @return True the tile has a game piece and can be whoopsed
   virtual bool CanBeWhoopsed() = 0;
 
-  /// @brief Updates the color of the pawn occupying the space
+  /// @brief Pawn arrives at the tile. 
+  ///        Updates the color of the pawn occupying the space
   /// @param pawn Pointer to the pawn that is moving to the space
-  virtual void MoveTo(Pawn* pawn) = 0;
+  virtual void PawnArrivingTo(Pawn* pawn) = 0;
 
-  /// @brief Updates the color of the pawn occupying to none
-  virtual void MoveFrom() = 0;
+  /// @brief Pawn leaves the tile. 
+  ///        Updates the color of the pawn occupying to none
+  virtual void PawnLeavingFrom() = 0;
 
   /// @brief Returns bool to tell if a piece is on the tile or not
   /// @return True if a piece is occupying

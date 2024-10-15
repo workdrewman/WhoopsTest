@@ -19,9 +19,9 @@ Pawn::Pawn(WhoopsColor color, int id) : color_{color}, id_{id} {}
 
 void Pawn::MoveTo(std::shared_ptr<Tile> new_tile)
 {
-  tile_occupied_->MoveFrom();
+  tile_occupied_->PawnLeavingFrom();
   tile_occupied_ = new_tile;
-  tile_occupied_->MoveTo(this);
+  tile_occupied_->PawnArrivingTo(this);
 }
 
 bool Pawn::CanBeWhoopsed()
