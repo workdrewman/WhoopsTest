@@ -3,7 +3,6 @@
 #include "OneButton.h" // for OneButton
 #include "power_mgt.h" // for set_max_power_in_volts_and_milliamps
 #include "led_control/tile_movement.h" // for indicate_move
-#include <iostream>
 #include "game_board/pawn/pawn.hpp" // for Pawn
 #include "game_board/tile/tile_container.hpp" // for TileContainer
 #include "game_board/whoops_color.hpp" // for WhoopsColor
@@ -12,17 +11,20 @@
 #define NUM_LEDS 44
 #define DATA_PIN 13
 #define BUTTON1 14
+#define HALL_SENSOR1 25
+#define HALL_SENSOR2 26
 
 CRGB leds[NUM_LEDS];
 OneButton button1{BUTTON1, true, true};
 
-// void getMove(int& from, int& to, int num_leds);
-// static void handleClick();
+static void handleClick();
 
 void setup() {
   Serial.begin(9600);
   FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);
   set_max_power_in_volts_and_milliamps(5, 120);
+  pinMode(HALL_SENSOR1, INPUT);
+  pinMode(HALL_SENSOR2, INPUT);
   auto tile_types = {game_board::TileType::kNormal, 
                      game_board::TileType::kSlide, game_board::TileType::kSlide,
                      game_board::TileType::kSlide, game_board::TileType::kSlide, game_board::TileType::kNormal,
@@ -68,33 +70,24 @@ void setup() {
   auto tile_container{std::make_shared<game_board::TileContainer>(tile_types, colors)};
   auto pawn{std::make_shared<game_board::Pawn>(game_board::WhoopsColor::kBlue, 0)};
 
-
-  // button1.attachClick(handleClick); 
+  button1.attachClick(handleClick); 
 }
 
-// int from, to = 0;
+
 void loop() {
-  // button1.tick();
-  led_control::indicate_move(0, 10, CRGB::Yellow);
-  led_control::indicate_move(0, 10, CRGB::Yellow);
-  led_control::indicate_move(11, 21, CRGB::Green);
-  led_control::indicate_move(11, 21, CRGB::Green);
-  led_control::indicate_move(22, 32, CRGB::Red);
-  led_control::indicate_move(22, 32, CRGB::Red);
-  led_control::indicate_move(33, 43, CRGB::Blue);
-  led_control::indicate_move(33, 43, CRGB::Blue);
+  button1.tick();
+
+  int sensorValue1 = analogRead(HALL_SENSOR1);  // Read analog value from Hall sensor
+  int sensorValue2 = analogRead(HALL_SENSOR2);  // Read analog value from Hall sensor
+  
+  Serial.print(sensorValue1);
+  Serial.print(",");
+  Serial.println(sensorValue2);
+
+  delay(100);                                   // Delay for 200 milliseconds
 }
 
-// void getMove(int& from, int& to, int num_leds)
-// {
-//   from = random() % num_leds;
-//   to = from + random(std::min(num_leds - from - 1, 12)) + 1;
-// }
 
-// static void handleClick() {
-//   getMove(from, to, NUM_LEDS);
-//   std::cout << "Moving from " << from << " to " << to << std::endl;
-//   for (int i = 0; i < 3; i++) {
-//     led_control::indicate_move(from, to, CRGB::Blue);
-//   }
-// }
+static void handleClick() {
+  // do something when button pressed
+}
