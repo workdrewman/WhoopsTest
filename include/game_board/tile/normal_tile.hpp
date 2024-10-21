@@ -19,10 +19,10 @@ class NormalTile : public Tile
   
   /// @brief Updates the color of the pawn occupying the space
   /// @param pawn Pointer to the pawn that is moving to the space
-  void MoveTo(Pawn* pawn) override { color_occupied_ = pawn->GetColor(); pawn_ = pawn;}
+  void PawnArrivingTo(Pawn* pawn) override { color_occupied_ = pawn->GetColor(); pawn_ = pawn;}
 
   /// @brief Updates the color of the pawn occupying to none
-  void MoveFrom() override { color_occupied_ = WhoopsColor::kNone; pawn_ = nullptr; }
+  void PawnLeavingFrom() override { color_occupied_ = WhoopsColor::kNone; pawn_ = nullptr; }
 
   /// @brief Returns bool to tell if a piece is on the tile or not
   /// @return True if a piece is occupying
