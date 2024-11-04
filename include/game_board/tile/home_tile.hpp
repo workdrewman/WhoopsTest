@@ -22,11 +22,13 @@ class HomeTile : public Tile
   void PawnArrivingTo(Pawn* pawn) override { color_occupied_ = pawn->GetColor(); pawn_ = pawn; }
 
   /// @brief Updates the color of the pawn occupying to none
-  void PawnLeavingFrom() override { color_occupied_ = WhoopsColor::kNone; }
+  void PawnLeavingFrom() override { color_occupied_ = WhoopsColor::kNone; pawn_ = nullptr; }
 
   /// @brief Returns bool to tell if a piece is on the tile or not
   /// @return True if a piece is occupying
-  bool IsVacant() override { return (color_occupied_ != WhoopsColor::kNone); pawn_ = nullptr; }
+  bool IsVacant() override { return (color_occupied_ != WhoopsColor::kNone); }
+
+  Pawn* GetPawn() { return pawn_; }
  private:
   int led_index_{-1};
   WhoopsColor tile_color_{WhoopsColor::kNone};

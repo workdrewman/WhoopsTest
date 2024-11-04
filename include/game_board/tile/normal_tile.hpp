@@ -27,6 +27,8 @@ class NormalTile : public Tile
   /// @brief Returns bool to tell if a piece is on the tile or not
   /// @return True if a piece is occupying
   bool IsVacant() override { return (color_occupied_ != WhoopsColor::kNone); }
+
+  Pawn* GetPawn() { return pawn_; }
  private:
   int led_index_{-1};
   WhoopsColor tile_color_{WhoopsColor::kNone};

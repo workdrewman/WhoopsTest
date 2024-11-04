@@ -34,6 +34,10 @@ class Tile
   /// @brief Returns bool to tell if a piece is on the tile or not
   /// @return True if a piece is occupying
   virtual bool IsVacant(){ return true; }
+  
+  /// @brief Returns a pointer to the pawn that occupies the tile
+  /// @return A pointer to the pawn.
+  virtual Pawn* GetPawn() = 0;
 };
 } // namespace game_board
 #endif // GAME_BOARD_TILE_BASE_H

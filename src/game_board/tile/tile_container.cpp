@@ -16,38 +16,48 @@
 #include "game_board/tile/start_tile.hpp"
 
 #include <vector> // for std::vector
-#include <memory> // for std::make_unique
+#include <memory> // for std::shared_ptr, std::make_shared
 
 namespace game_board
 {
 
 TileContainer::TileContainer(std::vector<TileType> tile_types, std::vector<WhoopsColor> tile_colors)
 {
-  bool slide_prev = false;
   for (auto idx = 0; idx < tile_types.size(); ++idx) {
     switch (tile_types.at(idx)){
       case TileType::kHome:
         tiles_.emplace_back(std::make_shared<HomeTile>(idx, tile_colors.at(idx)));
-        slide_prev = false;
         break;
       case TileType::kNormal:
         tiles_.emplace_back(std::make_shared<NormalTile>(idx, tile_colors.at(idx)));
-        slide_prev = false;
         break;
       case TileType::kSafety:
         tiles_.emplace_back(std::make_shared<SafetyTile>(idx, tile_colors.at(idx)));
-        slide_prev = false;
         break;
       case TileType::kSlide:
-        tiles_.emplace_back(std::make_shared<SlideTile>(idx, tile_colors.at(idx), !slide_prev));
-        slide_prev = true;
+        if (tile_types.at(idx - 1) == TileType::kSlide) {
+          if (tile_types.at(idx - 2) != TileType::kSlide) { // if it's the first
+            tiles_.emplace_back(std::make_shared<SlideTile>(idx, tile_colors.at(idx), false, true));
+            continue;
+          }
+          tiles_.emplace_back(std::make_shared<SlideTile>(idx, tile_colors.at(idx)));
+        }
+        tiles_.emplace_back(std::make_shared<SlideTile>(idx, tile_colors.at(idx), true));
         break;
       case TileType::kStart:
         tiles_.emplace_back(std::make_shared<StartTile>(idx, tile_colors.at(idx)));
-        slide_prev = false;
         break;
     }
   }
+}
+
+
+std::shared_ptr<Tile> TileContainer::GetTileFromSensor(int sensor_idx)
+{
+  if (sensor_idx < tiles_.size()){
+    return tiles_.at(sensor_idx);
+  } 
+  return nullptr;
 }
 
 } // namespace game_board

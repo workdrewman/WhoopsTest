@@ -22,14 +22,22 @@ enum class TileType{
   kNormal,
   kSafety,
   kSlide,
-  kStart
+  kStart,
+  kEntrance
 };
 
 class TileContainer
 {
  public:
+  /// @brief Constructor to create the game tiles
+  /// @param tile_types vector of tile types in order
+  /// @param tile_colors vector of tile colors in order
   TileContainer(std::vector<TileType> tile_types, std::vector<WhoopsColor> tile_colors);
- 
+
+  /// @brief Returns a pointer to the tile based on sensor input
+  /// @param sensor_idx 
+  std::shared_ptr<Tile> GetTileFromSensor(int sensor_idx);
+
  private:
   std::vector<std::shared_ptr<Tile>> tiles_;
 };

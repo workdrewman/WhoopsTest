@@ -14,7 +14,7 @@ namespace game_board
 class SlideTile : public Tile
 {
  public:
-  SlideTile(int index, WhoopsColor tile_color, bool slide_start = false) : 
+  SlideTile(int index, WhoopsColor tile_color, bool slide_start = false, bool entrance_tile = false) : 
             led_index_{index}, tile_color_{tile_color}, is_slide_start_{slide_start} {}
 
   bool CanBeWhoopsed() override { return !IsVacant(); };
@@ -34,11 +34,18 @@ class SlideTile : public Tile
   /// @return True if the tile is the start of a slide
   bool IsSlideStart() { return is_slide_start_; };
 
+  /// @brief Returns bool to tell if the piece should 
+  /// @return True if the piece should move to the safety tiles
+  bool AdvanceToSafetyTile(Pawn* pawn) { return (pawn->GetColor() == tile_color_) && is_entrance_; }
+
+  Pawn* GetPawn() { return pawn_; }
+
  private:
   int led_index_{-1};
   WhoopsColor tile_color_{WhoopsColor::kNone};
   WhoopsColor color_occupied_{WhoopsColor::kNone};
   bool is_slide_start_{false};
+  bool is_entrance_{true};
   Pawn* pawn_{nullptr};
 };
 } // namespace game_board
