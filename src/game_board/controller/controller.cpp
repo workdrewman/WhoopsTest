@@ -17,28 +17,32 @@
 namespace game_board
 {
 
-auto constexpr kTileTypes = {game_board::TileType::kNormal, 
-                  game_board::TileType::kSlide, game_board::TileType::kSlide,
-                  game_board::TileType::kSlide, game_board::TileType::kSlide, game_board::TileType::kNormal,
-                  game_board::TileType::kNormal, game_board::TileType::kSlide, game_board::TileType::kSlide,
-                  game_board::TileType::kSlide, game_board::TileType::kSlide, game_board::TileType::kNormal,
-                  
-                  game_board::TileType::kSlide, game_board::TileType::kSlide,
-                  game_board::TileType::kSlide, game_board::TileType::kSlide, game_board::TileType::kNormal,
-                  game_board::TileType::kNormal, game_board::TileType::kSlide, game_board::TileType::kSlide,
-                  game_board::TileType::kSlide, game_board::TileType::kSlide, game_board::TileType::kNormal,
-                  
-                  game_board::TileType::kSlide, game_board::TileType::kSlide,
-                  game_board::TileType::kSlide, game_board::TileType::kSlide, game_board::TileType::kNormal,
-                  game_board::TileType::kNormal, game_board::TileType::kSlide, game_board::TileType::kSlide,
-                  game_board::TileType::kSlide, game_board::TileType::kSlide, game_board::TileType::kNormal,
+auto constexpr kNumPawns{3};
 
-                  game_board::TileType::kSlide, game_board::TileType::kSlide,
-                  game_board::TileType::kSlide, game_board::TileType::kSlide, game_board::TileType::kNormal,
-                  game_board::TileType::kNormal, game_board::TileType::kSlide, game_board::TileType::kSlide,
-                  game_board::TileType::kSlide, game_board::TileType::kSlide};
+Controller::Controller()
+{
+ auto tile_types = {game_board::TileType::kNormal, 
+                     game_board::TileType::kSlide, game_board::TileType::kSlide,
+                     game_board::TileType::kSlide, game_board::TileType::kSlide, game_board::TileType::kNormal,
+                     game_board::TileType::kNormal, game_board::TileType::kSlide, game_board::TileType::kSlide,
+                     game_board::TileType::kSlide, game_board::TileType::kSlide, game_board::TileType::kNormal,
+                     
+                     game_board::TileType::kSlide, game_board::TileType::kSlide,
+                     game_board::TileType::kSlide, game_board::TileType::kSlide, game_board::TileType::kNormal,
+                     game_board::TileType::kNormal, game_board::TileType::kSlide, game_board::TileType::kSlide,
+                     game_board::TileType::kSlide, game_board::TileType::kSlide, game_board::TileType::kNormal,
+                     
+                     game_board::TileType::kSlide, game_board::TileType::kSlide,
+                     game_board::TileType::kSlide, game_board::TileType::kSlide, game_board::TileType::kNormal,
+                     game_board::TileType::kNormal, game_board::TileType::kSlide, game_board::TileType::kSlide,
+                     game_board::TileType::kSlide, game_board::TileType::kSlide, game_board::TileType::kNormal,
 
-auto constexpr kTileColors = {game_board::WhoopsColor::kNone,
+                     game_board::TileType::kSlide, game_board::TileType::kSlide,
+                     game_board::TileType::kSlide, game_board::TileType::kSlide, game_board::TileType::kNormal,
+                     game_board::TileType::kNormal, game_board::TileType::kSlide, game_board::TileType::kSlide,
+                     game_board::TileType::kSlide, game_board::TileType::kSlide};
+
+  auto colors = {game_board::WhoopsColor::kNone,
                   game_board::WhoopsColor::kYellow, game_board::WhoopsColor::kYellow,
                   game_board::WhoopsColor::kYellow, game_board::WhoopsColor::kYellow, game_board::WhoopsColor::kYellow,
                   game_board::WhoopsColor::kYellow, game_board::WhoopsColor::kYellow, game_board::WhoopsColor::kYellow,
@@ -59,14 +63,13 @@ auto constexpr kTileColors = {game_board::WhoopsColor::kNone,
                   game_board::WhoopsColor::kBlue, game_board::WhoopsColor::kBlue, game_board::WhoopsColor::kBlue,
                   game_board::WhoopsColor::kBlue, game_board::WhoopsColor::kBlue};
 
-auto constexpr kNumPawns{3};
-Controller::Controller() : tiles_{kTileTypes, kTileColors}
-{
+  tiles_ = std::make_shared<TileContainer>(tile_types, colors);
+
   for (int i = 0; i < kNumPawns; i++) {
-    pawns_.emplace_back(std::make_shared<game_board::Pawn>(game_board::WhoopsColor::kYellow, static_cast<int>(game_board::WhoopsColor::kYellow) + i));
-    pawns_.emplace_back(std::make_shared<game_board::Pawn>(game_board::WhoopsColor::kGreen, static_cast<int>(game_board::WhoopsColor::kGreen) + i));
-    pawns_.emplace_back(std::make_shared<game_board::Pawn>(game_board::WhoopsColor::kRed, static_cast<int>(game_board::WhoopsColor::kRed) + i));
-    pawns_.emplace_back(std::make_shared<game_board::Pawn>(game_board::WhoopsColor::kBlue, static_cast<int>(game_board::WhoopsColor::kBlue) + i));
+    pawns_.push_back(new Pawn(game_board::WhoopsColor::kYellow, static_cast<int>(game_board::WhoopsColor::kYellow) + i));
+    pawns_.push_back(new Pawn(game_board::WhoopsColor::kGreen, static_cast<int>(game_board::WhoopsColor::kGreen) + i));
+    pawns_.push_back(new Pawn(game_board::WhoopsColor::kRed, static_cast<int>(game_board::WhoopsColor::kRed) + i));
+    pawns_.push_back(new Pawn(game_board::WhoopsColor::kBlue, static_cast<int>(game_board::WhoopsColor::kBlue) + i));
   } 
 }
 
@@ -77,8 +80,19 @@ Pawn* Controller::GetPawnFromTile(std::shared_ptr<Tile> tile)
 
 Pawn* Controller::GetPawnFromSensor(int sensor_idx)
 {
-  auto tile = tiles_.GetTileFromSensor(sensor_idx);
+  auto tile = tiles_->GetTileFromSensor(sensor_idx);
   return tile->GetPawn();
+}
+
+std::vector<Pawn*> Controller::GetCurrentColorPawns()
+{
+  std::vector<Pawn*> current_pawns;
+  for (size_t i = 0; i < pawns_.size(); i++) {
+    if (pawns_.at(i)->GetColor() == current_color_) {
+      current_pawns.push_back(pawns_.at(i));
+    }
+  }
+  return current_pawns;
 }
 
 } // namespace game_board

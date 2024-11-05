@@ -23,11 +23,13 @@ class Controller
  public:
   Controller();
   Pawn* GetPawnFromSensor(int sensor_idx);
+  std::vector<Pawn*> GetCurrentColorPawns();
  private:
   Pawn* GetPawnFromTile(std::shared_ptr<Tile> tile);
  
-  TileContainer tiles_;
-  std::vector<std::shared_ptr<Pawn>> pawns_;
+  std::shared_ptr<TileContainer> tiles_;
+  std::vector<Pawn*> pawns_;
+  WhoopsColor current_color_{WhoopsColor::kNone};
 };
 } // namespace game_board
 #endif // GAME_BOARD_CONTROLLER_H
