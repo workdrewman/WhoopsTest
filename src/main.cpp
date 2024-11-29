@@ -3,8 +3,7 @@
 #include "OneButton.h" // for OneButton
 #include "power_mgt.h" // for set_max_power_in_volts_and_milliamps
 #include "led_control/tile_movement.h" // for indicate_move
-#include "game_board/pawn/pawn.hpp" // for Pawn
-#include "game_board/tile/tile_container.hpp" // for TileContainer
+#include "game_board/controller/controller.hpp" // for Controller
 #include "game_board/whoops_color.hpp" // for WhoopsColor
 #include <memory> // for make_unique
 #include "game_logic/logic_controller" // for LogicController
@@ -26,50 +25,7 @@ void setup() {
   set_max_power_in_volts_and_milliamps(5, 120);
   pinMode(HALL_SENSOR1, INPUT);
   pinMode(HALL_SENSOR2, INPUT);
-  auto tile_types = {game_board::TileType::kNormal, 
-                     game_board::TileType::kSlide, game_board::TileType::kSlide,
-                     game_board::TileType::kSlide, game_board::TileType::kSlide, game_board::TileType::kNormal,
-                     game_board::TileType::kNormal, game_board::TileType::kSlide, game_board::TileType::kSlide,
-                     game_board::TileType::kSlide, game_board::TileType::kSlide, game_board::TileType::kNormal,
-                     
-                     game_board::TileType::kSlide, game_board::TileType::kSlide,
-                     game_board::TileType::kSlide, game_board::TileType::kSlide, game_board::TileType::kNormal,
-                     game_board::TileType::kNormal, game_board::TileType::kSlide, game_board::TileType::kSlide,
-                     game_board::TileType::kSlide, game_board::TileType::kSlide, game_board::TileType::kNormal,
-                     
-                     game_board::TileType::kSlide, game_board::TileType::kSlide,
-                     game_board::TileType::kSlide, game_board::TileType::kSlide, game_board::TileType::kNormal,
-                     game_board::TileType::kNormal, game_board::TileType::kSlide, game_board::TileType::kSlide,
-                     game_board::TileType::kSlide, game_board::TileType::kSlide, game_board::TileType::kNormal,
-
-                     game_board::TileType::kSlide, game_board::TileType::kSlide,
-                     game_board::TileType::kSlide, game_board::TileType::kSlide, game_board::TileType::kNormal,
-                     game_board::TileType::kNormal, game_board::TileType::kSlide, game_board::TileType::kSlide,
-                     game_board::TileType::kSlide, game_board::TileType::kSlide};
-
-  auto colors = {game_board::WhoopsColor::kNone,
-                  game_board::WhoopsColor::kYellow, game_board::WhoopsColor::kYellow,
-                  game_board::WhoopsColor::kYellow, game_board::WhoopsColor::kYellow, game_board::WhoopsColor::kYellow,
-                  game_board::WhoopsColor::kYellow, game_board::WhoopsColor::kYellow, game_board::WhoopsColor::kYellow,
-                  game_board::WhoopsColor::kYellow, game_board::WhoopsColor::kYellow, game_board::WhoopsColor::kNone,
-
-                  game_board::WhoopsColor::kGreen, game_board::WhoopsColor::kGreen,
-                  game_board::WhoopsColor::kGreen, game_board::WhoopsColor::kGreen, game_board::WhoopsColor::kGreen,
-                  game_board::WhoopsColor::kGreen, game_board::WhoopsColor::kGreen, game_board::WhoopsColor::kGreen,
-                  game_board::WhoopsColor::kGreen, game_board::WhoopsColor::kGreen, game_board::WhoopsColor::kNone,
-
-                  game_board::WhoopsColor::kRed, game_board::WhoopsColor::kRed,
-                  game_board::WhoopsColor::kRed, game_board::WhoopsColor::kRed, game_board::WhoopsColor::kRed,
-                  game_board::WhoopsColor::kRed, game_board::WhoopsColor::kRed, game_board::WhoopsColor::kRed,
-                  game_board::WhoopsColor::kRed, game_board::WhoopsColor::kRed, game_board::WhoopsColor::kNone,
-                  
-                  game_board::WhoopsColor::kBlue, game_board::WhoopsColor::kBlue,
-                  game_board::WhoopsColor::kBlue, game_board::WhoopsColor::kBlue, game_board::WhoopsColor::kBlue,
-                  game_board::WhoopsColor::kBlue, game_board::WhoopsColor::kBlue, game_board::WhoopsColor::kBlue,
-                  game_board::WhoopsColor::kBlue, game_board::WhoopsColor::kBlue};
-
-  auto tile_container{std::make_shared<game_board::TileContainer>(tile_types, colors)};
-  auto pawn{std::make_shared<game_board::Pawn>(game_board::WhoopsColor::kBlue, 0)};
+  auto game_controller = std::make_shared<game_board::Controller>();
 
   button1.attachClick(handleClick); 
 
@@ -79,7 +35,6 @@ void setup() {
 
 void loop() {
   button1.tick();
-
   int sensorValue1 = analogRead(HALL_SENSOR1);  // Read analog value from Hall sensor
   int sensorValue2 = analogRead(HALL_SENSOR2);  // Read analog value from Hall sensor
   
@@ -90,7 +45,7 @@ void loop() {
   //Continue to update sensor values
   //If card scanned, update the lastCard value in logic_controller
 
-  delay(100);                                   // Delay for 200 milliseconds
+  delay(100);
 }
 
 
