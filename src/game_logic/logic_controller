@@ -1,0 +1,120 @@
+#include <vector> // for std::vector
+
+namespace logic_controller
+{
+    const int MAX_PLAYERS = 4;
+    const int PIECES_PER_PLAYER = 3;
+    const int MAX_PIECES = MAX_PLAYERS * PIECES_PER_PLAYER;
+    const int BOARD_SIZE = 80;
+
+    int currentPlayer;
+    int playerCount;
+    //No card yet: -1, Whoops!: 0, Other cards: 1-12
+    int lastCard = -1;
+    //Yellow: 1, Green: 2, Red: 3, Blue: 4
+    int player1Color;
+    int player2Color;
+    int player3Color;
+    int player4Color;
+
+    //Locations
+    //Map
+    // 0-43: Around the board starting from Yellow
+    // 44-46: Yellow's Start
+    // 47-49: Green's Start
+    // 50-52: Red's Start
+    // 53-55: Blue's Start
+    // 56-58: Yellow's Safety Zone
+    // 59-61: Green's Safety Zone
+    // 62-64: Red's Safety Zone
+    // 65-67: Blue's Safety Zone
+    // 68-70: Yellow's Home
+    // 71-73: Green's Home
+    // 74-76: Red's Home
+    // 77-79: Blue's Home
+    int[] currentLocations = new int[BOARD_SIZE];
+    int[] lastLocations = new int[BOARD_SIZE];
+    int[] player1Locations = new int[PIECES_PER_PLAYER];
+    int[] player2Locations = new int[PIECES_PER_PLAYER];
+    int[] player3Locations = new int[PIECES_PER_PLAYER];
+    int[] player4Locations = new int[PIECES_PER_PLAYER];
+
+    void startGame() {
+        Serial.println("Setup Conplete");
+        Serial.println("Press any key to start game");
+        while (!Serial.available()) {
+            //Wait for input
+        }
+        Serial.println("Game Started");
+        currentPlayer = 0;
+        getPlayerCount();
+    }
+
+    void getPlayerCount() {
+        //Scan card to get player count
+        Audio
+        waitforCard();
+        while (lastCard < 2 || lastCard > 4) {
+            //ERROR
+            Audio
+            //Scan card to get player count
+            waitforCard();
+        }
+        playerCount = lastCard;
+        lastCard = -1;
+    }
+
+    //Next player, 4 players in total
+    void nextPlayer() {
+        currentPlayer = (currentPlayer + 1) % playerCount;
+    } 
+
+    //Save the last card scanned
+    void saveCard(int card) {
+        lastCard = card;
+    }
+
+    //Wait for a card to be scanned
+    int waitForCard() {
+        
+    }
+
+    //Save the current locations
+    void saveCurrentLocations(bool[] locations) {
+        currentLocations = locations;
+    }
+
+    //Save the last locations
+    void saveLastLocations(bool[] locations) {
+        lastLocations = locations;
+    }
+
+    //Check if all pieces are placed
+    bool allPiecesPlaced() {
+        int count = 0;
+        for (int i = 0; i < 40; i++) {
+            if (currentLocations[i]) {
+                count++;
+            }
+        }
+        return count == MAX_PIECES;
+    }
+
+    int moveSpaces(int color, int location, int spaces) {
+        switch (color) {
+            case 1:     //Yellow
+                
+                break;
+            case 2:     //Green
+                
+                break;
+            case 3:     //Red
+                
+                break;
+            case 4:     //Blue
+                
+                break;
+        }
+    }
+
+}
