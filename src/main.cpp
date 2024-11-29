@@ -7,6 +7,7 @@
 #include "game_board/tile/tile_container.hpp" // for TileContainer
 #include "game_board/whoops_color.hpp" // for WhoopsColor
 #include <memory> // for make_unique
+#include "game_logic/logic_controller" // for LogicController
 
 #define NUM_LEDS 44
 #define DATA_PIN 13
@@ -71,6 +72,8 @@ void setup() {
   auto pawn{std::make_shared<game_board::Pawn>(game_board::WhoopsColor::kBlue, 0)};
 
   button1.attachClick(handleClick); 
+
+  logic_controller::startGame();
 }
 
 
@@ -80,9 +83,12 @@ void loop() {
   int sensorValue1 = analogRead(HALL_SENSOR1);  // Read analog value from Hall sensor
   int sensorValue2 = analogRead(HALL_SENSOR2);  // Read analog value from Hall sensor
   
-  Serial.print(sensorValue1);
-  Serial.print(",");
-  Serial.println(sensorValue2);
+   Serial.print(sensorValue1);
+   Serial.print(",");
+   Serial.println(sensorValue2);
+
+  //Continue to update sensor values
+  //If card scanned, update the lastCard value in logic_controller
 
   delay(100);                                   // Delay for 200 milliseconds
 }

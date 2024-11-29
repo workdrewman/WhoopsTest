@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "*.embeddedhtml": "html",
+        "logic_controller": "cpp"
+    }
+}
