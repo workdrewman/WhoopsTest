@@ -120,11 +120,20 @@
 #ifdef TESTING_RFID
 #include <SPI.h>
 #include <MFRC522.h>
+#include <freertos/FreeRTOS.h>
+#include <FastLED.h> // for FastLED
+#include "led_control/tile_movement.h" // for indicate_move
 
 #define SS_PIN 5
 #define RST_PIN 15
+#define NUM_LEDS 44
+#define DATA_PIN 13
 
-MFRC522 rfid(SS_PIN, RST_PIN); // Instance of the class
+uint8_t constexpr kInvalidCardName{99};
+
+CRGB leds[NUM_LEDS]; // Instance of ARGB LEDs
+MFRC522 rfid(SS_PIN, RST_PIN); // Instance of the rfid module
+uint8_t shared_tag_id = kInvalidCardName; // Stores the most recently scanned tag
 
 MFRC522::MIFARE_Key key;
 void printHex(byte *buffer, byte bufferSize);
@@ -133,26 +142,26 @@ void printDec(byte *buffer, byte bufferSize);
 // Define the list of UIDs and their corresponding names
 struct Card {
   byte uid[7];           // UID of the card
-  const char *name;      // Name of the card
+  uint8_t name;      // Name of the card
 };
 
 Card allowedCards[] = {
-  {{0x04, 0xCD, 0x89, 0xA6, 0x67, 0x26, 0x81}, "Card 1"},
-  {{0x04, 0x67, 0x4D, 0xA4, 0x67, 0x26, 0x81}, "Card 2"},
-  {{0x04, 0x1D, 0xCF, 0xA5, 0x67, 0x26, 0x81}, "Card 3"},
-  {{0x04, 0x8B, 0xF4, 0xA7, 0x67, 0x26, 0x81}, "Card 4"},
-  {{0x04, 0x2A, 0x8C, 0xA2, 0x67, 0x26, 0x81}, "Card 5"},
-  {{0x04, 0x75, 0xDF, 0xA5, 0x67, 0x26, 0x81}, "Card 7"},
-  {{0x04, 0xC4, 0x63, 0xA5, 0x67, 0x26, 0x81}, "Card 8"},
-  {{0x04, 0x31, 0x98, 0xA9, 0x67, 0x26, 0x81}, "Card 10"},
-  {{0x04, 0x8C, 0xDD, 0xA5, 0x67, 0x26, 0x81}, "Card 11"},
-  {{0x04, 0x6D, 0x78, 0xA2, 0x67, 0x26, 0x81}, "Card 12"},
-  {{0x04, 0x7F, 0x36, 0xA4, 0x67, 0x26, 0x81}, "Sorry!"},
+  {{0x04, 0xCD, 0x89, 0xA6, 0x67, 0x26, 0x81}, 1},
+  {{0x04, 0x67, 0x4D, 0xA4, 0x67, 0x26, 0x81}, 2},
+  {{0x04, 0x1D, 0xCF, 0xA5, 0x67, 0x26, 0x81}, 3},
+  {{0x04, 0x8B, 0xF4, 0xA7, 0x67, 0x26, 0x81}, 4},
+  {{0x04, 0x2A, 0x8C, 0xA2, 0x67, 0x26, 0x81}, 5},
+  {{0x04, 0x75, 0xDF, 0xA5, 0x67, 0x26, 0x81}, 7},
+  {{0x04, 0xC4, 0x63, 0xA5, 0x67, 0x26, 0x81}, 8},
+  {{0x04, 0x31, 0x98, 0xA9, 0x67, 0x26, 0x81}, 10},
+  {{0x04, 0x8C, 0xDD, 0xA5, 0x67, 0x26, 0x81}, 11},
+  {{0x04, 0x6D, 0x78, 0xA2, 0x67, 0x26, 0x81}, 12},
+  {{0x04, 0x7F, 0x36, 0xA4, 0x67, 0x26, 0x81}, 0},
 };
 const int numAllowedCards = sizeof(allowedCards) / sizeof(allowedCards[0]);
 
 // Function to find if the scanned UID matches an allowed card
-const char *getCardName(byte *scannedUID, byte uidSize) {
+uint8_t getCardName(byte *scannedUID, byte uidSize) {
   for (int i = 0; i < numAllowedCards; i++) {
     // Check if UID sizes match
     if (uidSize != sizeof(allowedCards[i].uid)) {
@@ -174,49 +183,54 @@ const char *getCardName(byte *scannedUID, byte uidSize) {
     }
   }
 
-  return nullptr; // No matches found
+  return kInvalidCardName; // No matches found
+}
+
+void RFIDTask(void *parameter) {
+    while (true) {
+        if (rfid.PICC_IsNewCardPresent() && rfid.PICC_ReadCardSerial()) {
+            uint8_t new_card_id = getCardName(rfid.uid.uidByte, rfid.uid.size);
+            if (new_card_id != kInvalidCardName) {
+              Serial.println(F("Tag accepted"));
+              Serial.print(F("Card Name: "));
+              Serial.println(new_card_id);
+              shared_tag_id = new_card_id;
+            } 
+            
+            else {
+              Serial.println(F("Tag not recognized"));
+            }
+
+            rfid.PICC_HaltA(); // Stop reading after one scan
+        }
+
+        vTaskDelay(100 / portTICK_PERIOD_MS); // Avoid overwhelming the CPU
+    }
 }
 
 void setup() { 
   Serial.begin(9600);
+  FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS); // Add LEDs
+  set_max_power_in_volts_and_milliamps(5, 120); // Set brightness
   SPI.begin(); // Init SPI bus
   rfid.PCD_Init(); // Init MFRC522 
-
-  for (byte i = 0; i < 6; i++) {
-    key.keyByte[i] = 0xFF;
-  }
-
-  Serial.println(F("This code scans all MIFARE tags and checks against a list of allowed UIDs."));
+  xTaskCreate(
+      RFIDTask,         // Task function
+      "RFID Read",      // Name of the task
+      2048,             // Stack size (in bytes)
+      NULL,             // Task parameter
+      1,                // Priority
+      NULL              // Task handle
+  );
+  Serial.println(F("This code is intended as a demo for the RFID and LED system."));
 }
 
 void loop() {
-  // Reset the loop if no new card is present on the sensor/reader
-  if (!rfid.PICC_IsNewCardPresent())
-    return;
-
-  // Verify if the NUID has been read
-  if (!rfid.PICC_ReadCardSerial())
-    return;
-
-  Serial.print(F("PICC type: "));
-  MFRC522::PICC_Type piccType = rfid.PICC_GetType(rfid.uid.sak);
-  Serial.println(rfid.PICC_GetTypeName(piccType));
-
-  // Check if the scanned tag matches any card in the list
-  const char *cardName = getCardName(rfid.uid.uidByte, rfid.uid.size);
-  if (cardName) {
-    Serial.println(F("Tag accepted"));
-    Serial.print(F("Card Name: "));
-    Serial.println(cardName);
-  } else {
-    Serial.println(F("Tag not recognized"));
+  uint8_t card_id = shared_tag_id;
+  if (card_id != kInvalidCardName && card_id != 0) {
+    led_control::indicate_move(0, card_id, CRGB::Blue);
   }
-
-  // Halt PICC
-  rfid.PICC_HaltA();
-
-  // Stop encryption on PCD
-  rfid.PCD_StopCrypto1();
+  vTaskDelay(500 / portTICK_PERIOD_MS);
 }
 
 /**
