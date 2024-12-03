@@ -24,5 +24,9 @@ void indicate_move(int from, int to, CRGB color);
 /// @param color Color to illuminate the path with
 void indicate_move(std::vector<int> indexes, CRGB color);
 
+/// @brief Method to indicate a move from one tile to another
+/// @param card_scanned number of the scanned card
+void demo_move(int card_scanned);
+
 } //namespace led_control
 #endif // LED_CONTROL_TILE_MOVEMENT_H

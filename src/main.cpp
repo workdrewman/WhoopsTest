@@ -228,7 +228,9 @@ void setup() {
 void loop() {
   uint8_t card_id = shared_tag_id;
   if (card_id != kInvalidCardName && card_id != 0) {
-    led_control::indicate_move(0, card_id, CRGB::Blue);
+    if (card_id == 12) { card_id = 11; }
+    led_control::demo_move(card_id + 1);
+
   }
   vTaskDelay(500 / portTICK_PERIOD_MS);
 }
