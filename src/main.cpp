@@ -128,6 +128,7 @@
 #define RST_PIN 15
 #define NUM_LEDS 44
 #define DATA_PIN 13
+#define POT_Pin 2
 
 uint8_t constexpr kInvalidCardName{99};
 
@@ -208,6 +209,19 @@ void RFIDTask(void *parameter) {
     }
 }
 
+void LEDPotTask(void *parameter) {
+  uint16_t pot_read = 0; // Stores the most recent reading from the potentiometer
+  uint32_t scaled_pot = 0; // Scaled value of the potentiometer
+  while (true) {
+    pot_read = analogRead(POT_Pin);
+    scaled_pot = pot_read * 200 / 4095; // Scale 0-4095 to 0-100
+    set_max_power_in_volts_and_milliamps(5, scaled_pot); // Set brightness
+    Serial.print(("Setting LED brightness to: "));
+    Serial.println(scaled_pot);
+    vTaskDelay(10000 / portTICK_PERIOD_MS); // Avoid overwhelming the CPU
+  }
+}
+
 void setup() { 
   Serial.begin(9600);
   FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS); // Add LEDs
@@ -220,6 +234,14 @@ void setup() {
       2048,             // Stack size (in bytes)
       NULL,             // Task parameter
       1,                // Priority
+      NULL              // Task handle
+  );
+  xTaskCreate(
+      LEDPotTask,         // Task function
+      "Potentiometer read",      // Name of the task
+      2048,             // Stack size (in bytes)
+      NULL,             // Task parameter
+      2,                // Priority
       NULL              // Task handle
   );
   Serial.println(F("This code is intended as a demo for the RFID and LED system."));
