@@ -105,4 +105,6 @@ std::vector<uint8_t> PieceDetection::getDataCopy()
   return _sensor_data;  // Return a copy of the data vector
 }
 
+std::vector<uint8_t> PieceDetection::getChangedSensors(){}
+
 } // namespace piece_detection

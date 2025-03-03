@@ -40,7 +40,13 @@ class PieceDetection{
   uint8_t getDataBlock(uint8_t chip, uint8_t port);
 
   /// @brief returns a copy of the data vector
+  /// @return copy of sensor data
   std::vector<uint8_t> getDataCopy();
+
+  /// @brief returns a vector of all the changed sensors in order
+  /// @return vector of sensor ids
+  std::vector<uint8_t> getChangedSensors();
+
   
  private:
   void initMCP23017(uint8_t addr);
@@ -51,6 +57,7 @@ class PieceDetection{
   std::vector<uint8_t> _sensor_data;
   std::mutex _data_mutex;
   uint8_t _num_chips;
+  std::vector<uint8_t> _changed_sensors;
 };
 } // namespace piece_detection
 #endif // PIECE_DETECTION_H
