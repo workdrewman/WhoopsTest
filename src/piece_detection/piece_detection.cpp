@@ -6,6 +6,7 @@
 
 #include "piece_detection/piece_detection.hpp"
 #include <Wire.h> // for I2C communication
+#include <algorithm> // for std::find
 
 namespace piece_detection
 {
@@ -96,6 +97,24 @@ void PieceDetection::writeData(uint8_t chip, uint8_t port, uint8_t value)
   if (index < 0 || index >= _sensor_data.size()) return;  // Bounds check
 
   std::lock_guard<std::mutex> lock(_data_mutex);  // Lock mutex
+  uint8_t old_value = _sensor_data[index];  // Read old value
+  if (old_value != value) {
+    std::vector<uint8_t> to_remove;
+    for (int i = 0; i < 8; i++) {
+      if ((old_value & (1 << i)) != (value & (1 << i))) {
+        if (std::find(_changed_sensors.begin(), _changed_sensors.end(), index * 8 + i) == _changed_sensors.end()) {
+          // Only add if not already present
+          _changed_sensors.push_back(index * 8 + i);  // Store changed sensor index
+        } else {
+          // If already present, mark for removal
+          to_remove.push_back(index * 8 + i);
+        }
+      }
+    }
+    for (auto idx : to_remove) {
+      _changed_sensors.erase(std::remove(_changed_sensors.begin(), _changed_sensors.end(), idx), _changed_sensors.end());
+    }
+  }
   _sensor_data[index] = value;  // Remove volatile inside lock
 }
 
@@ -105,6 +124,19 @@ std::vector<uint8_t> PieceDetection::getDataCopy()
   return _sensor_data;  // Return a copy of the data vector
 }
 
-std::vector<uint8_t> PieceDetection::getChangedSensors(){}
+bool PieceDetection::hasChangedSensor()
+{
+  if (_changed_sensors.size() == 0) {
+    return false;  // No changed sensors
+  }
+  return true;
+}
+
+std::vector<uint8_t> PieceDetection::getChangedSensors()
+{
+  std::vector<uint8_t> copy_changed = _changed_sensors;
+  _changed_sensors = {};
+  return copy_changed;
+}
 
 } // namespace piece_detection

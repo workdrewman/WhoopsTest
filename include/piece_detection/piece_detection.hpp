@@ -47,11 +47,31 @@ class PieceDetection{
   /// @return vector of sensor ids
   std::vector<uint8_t> getChangedSensors();
 
+  /// @brief Check if any sensor has changed
+  /// @return true if any sensor has changed
+  bool hasChangedSensor();
+
   
  private:
+  /// @brief Initialize a single MCP23017 chip
+  /// @param addr The I2C address of the chip
   void initMCP23017(uint8_t addr);
+
+  /// @brief Read the input from a specific MCP23017 chip
+  /// @param addr The I2C address of the chip
+  /// @param gpioReg The GPIO register to read from
+  /// @return The read value from the register
   uint8_t readMCPInput(uint8_t addr, uint8_t gpioReg);
+
+  /// @brief Write piece detection sensor values to private sensor data
+  /// @param chip The chip number
+  /// @param port The port number 0 (A) or 1 (B)
+  /// @param value the 8 bit value to write
   void writeData(uint8_t chip, uint8_t port, uint8_t value);
+
+  /// @brief Get the data from a specific chip and index
+  /// @param chip The chip number
+  /// @param index The port number 0 (A) or 1 (B)
   uint8_t getData(uint8_t chip, uint8_t index);
 
   std::vector<uint8_t> _sensor_data;
