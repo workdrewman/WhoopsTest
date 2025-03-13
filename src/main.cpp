@@ -6,13 +6,30 @@ piece_detection::PieceDetection* pieceDetection = new piece_detection::PieceDete
 void setup() {
   Serial.begin(9600);
   pieceDetection->initMCP23017();
+
+  // Create the FreeRTOS task
+  xTaskCreate(
+    [](void* pvParameters) {
+      while (true) {
+        pieceDetection->readMCPInputs();
+        vTaskDelay(pdMS_TO_TICKS(50));
+      }
+    },   // Task function
+    "ReadMCPInputs",     // Name of the task
+    2048,                // Stack size (in words, not bytes)
+    NULL,                // Task input parameter
+    1,                   // Priority of the task
+    NULL                 // Task handle
+  );
 }
 
 void loop() {
-  pieceDetection->readMCPInputs();
-  std::vector<uint8_t> data = pieceDetection->getDataCopy();
-  for (int i = 0; i < data.size(); i++) {
-    Serial.println(data[i], BIN); // Print as binary
+  if (pieceDetection->hasChangedSensor()) {
+    auto changedSensors = pieceDetection->getChangedSensors();
+    for (auto sensor : changedSensors) {
+      uint8_t data = pieceDetection->getDataSingle(sensor);
+      Serial.printf("Sensor changed: %d Value: %d\n", sensor, data);
+    }
   }
-  delay(1000); // Poll every 1s
+  vTaskDelay(pdMS_TO_TICKS(10000));
 }
