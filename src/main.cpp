@@ -31,5 +31,5 @@ void loop() {
       Serial.printf("Sensor changed: %d Value: %d\n", sensor, data);
     }
   }
-  vTaskDelay(pdMS_TO_TICKS(10000));
+  vTaskDelay(pdMS_TO_TICKS(1000));
 }
