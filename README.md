@@ -1,2 +1,2 @@
 # WhoopsTest
-CPE/EE 490 Capstone Code for Whoops! game. This is the repo for testing code that will not be on the hardware.
+This branch is intended as a test for the power supply system. The goal is to flash leds in a sequence to determine if the state is lost when switching between power.
