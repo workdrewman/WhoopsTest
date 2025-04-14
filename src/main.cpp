@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "piece_detection/piece_detection.hpp" // for PieceDetection
 
-piece_detection::PieceDetection* pieceDetection = new piece_detection::PieceDetection(2);
+piece_detection::PieceDetection* pieceDetection = new piece_detection::PieceDetection(6);
 
 void setup() {
   Serial.begin(9600);
@@ -28,8 +28,9 @@ void loop() {
     auto changedSensors = pieceDetection->getChangedSensors();
     for (auto sensor : changedSensors) {
       uint8_t data = pieceDetection->getDataSingle(sensor);
-      Serial.printf("Sensor changed: %d Value: %d\n", sensor, data);
+      Serial.printf("Sensor changed: %d Value: %d\n", piece_detection::kSensorMap.at(sensor), data);
+      // Serial.printf("Sensor changed: %d Value: %d\n", sensor, data);
     }
   }
-  vTaskDelay(pdMS_TO_TICKS(1000));
+  vTaskDelay(pdMS_TO_TICKS(100));
 }
